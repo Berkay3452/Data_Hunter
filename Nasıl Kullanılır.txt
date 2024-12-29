@@ -1,0 +1,2 @@
+Bu Projenin Çalışması İçin Selenium'un Yüklü Olması Gerekmektedir Aksi Takdirde Hata Alınır . Selenium Kurmak İçin Visual Studioda "Araçlar" -->"NuGet Paket Yöneticisi" --> "Çözüm için Nuget Paketlerini Yönet Kısmı" "Selenium" Aratılıp İndirilir 
+-- Saygılar Ege Şahin,Berkay Öztürk
