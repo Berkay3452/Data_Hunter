@@ -1,4 +1,4 @@
-﻿using OpenQA.Selenium; 
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using static OpenQA.Selenium.BiDi.Modules.BrowsingContext.ClipRectangle;
 using static System.Collections.Specialized.BitVector32;
 
 // Selenium Classından Yararlanarak Web Scraping Yaptık
@@ -22,18 +23,19 @@ namespace Data_Hunter_Tool
         public abstract void islem3();
         public abstract void islem4();
         public abstract void islem5();
-        
+        public abstract void islem6();
+
 
         public abstract void hakkimizda();
-        
+
     }
-    class İslemler:imzalar
+    class İslemler : imzalar
     {
         public string tel_no;
 
         public string domain;
         public string web_waf;
-        public string web_sub;
+        
 
         private string kullanici_ipadress;
         public string Kullanici_ipadress
@@ -63,11 +65,11 @@ namespace Data_Hunter_Tool
         public override void islem1()
         {
             Console.WriteLine("Lütfen İp Adresini Girin :");
-            
-            
+
+
             kullanici_ipadress = Convert.ToString(Console.ReadLine());
-            
-            
+
+
             if (string.IsNullOrEmpty(kullanici_ipadress)) // IP adresi doğrulanmamışsa işlemi durdur
             {
                 Console.WriteLine("Geçerli bir IP adresi girilmedi. İşlem durduruldu.");
@@ -121,7 +123,7 @@ namespace Data_Hunter_Tool
         public override void islem3()
         {
 
-            
+
             Console.WriteLine("Lütfen İncelemek İstediğiniz Web Sitesinin Domain'ini Girin (www.example.com)");
             domain = Convert.ToString(Console.ReadLine());
             IWebDriver driver3 = new ChromeDriver();
@@ -149,16 +151,16 @@ namespace Data_Hunter_Tool
             Console.ResetColor();
             driver3.Close();
             element3.Submit();
-            
-            
+
+
         }
-        
+
         public override void islem4()
         {
             Console.WriteLine("Lütfen Geçerli Bir Telefon Numarası Giriniz : (örn : 5523522855)");
             tel_no = Convert.ToString(Console.ReadLine());
             IWebDriver driver4 = new ChromeDriver();
-            driver4.Manage().Window.Minimize();   
+            driver4.Manage().Window.Minimize();
             driver4.Navigate().GoToUrl("https://messente.com/carrier-lookup");
             var element4_ = driver4.FindElement(By.XPath("/html/body/div[2]/div/div[4]/div/div[2]/button[4]"));
             element4_.Click();
@@ -192,18 +194,20 @@ namespace Data_Hunter_Tool
         }
         public override void islem5()
         {
-            Console.WriteLine("Lütfen Bir Site Giriniz:  (örn www.youtube.com)");
+            Console.WriteLine("Lütfen Şifre Girin");
             web_waf = Convert.ToString(Console.ReadLine());
             IWebDriver driver5 = new ChromeDriver();
             driver5.Manage().Window.Minimize();
-            driver5.Navigate().GoToUrl("https://www.urlvoid.com/");
-            var element5 = driver5.FindElement(By.XPath("/html/body/div[1]/div[1]/div[1]/form/div/input"));
+            driver5.Navigate().GoToUrl("https://www.md5hashgenerator.com/");
+            var element5 = driver5.FindElement(By.XPath("/html/body/div[3]/div/div[3]/div/form/div/div/textarea"));
+            element5.Clear();
             element5.SendKeys(web_waf);
-            var element5_click = driver5.FindElement(By.XPath("/html/body/div[1]/div[1]/div[1]/form/div/span/button"));
-            element5_click.Click();
+            var element6_click = driver5.FindElement(By.XPath("/html/body/div[3]/div/div[3]/div/form/button"));
+            element6_click.Click();
+
             
-            
-            var bilgi10 = driver5.FindElements(By.XPath("/html/body/div[1]/div[1]/div[2]/div/main/div/div/div"));
+
+            var bilgi10 = driver5.FindElements(By.XPath("/html/body/div[3]/div/div[3]/div/table"));
             if (bilgi10.Count > 0)
             {
                 foreach (var bil in bilgi10)
@@ -215,10 +219,8 @@ namespace Data_Hunter_Tool
             {
                 Console.WriteLine("Belirtilen XPath ile eşleşen bilgi bulunamadı. XPath doğruluğunu kontrol edin.");
             }
-            element5.Submit();
+           
             driver5.Close();
-            
-
 
         }
 
@@ -234,6 +236,42 @@ namespace Data_Hunter_Tool
             }
         }
 
+        public override void islem6()
+        {
+            Console.WriteLine("Lütfen Portu Taranacak Sitenin Domain'ini Giriniz :");
+            web_waf = Convert.ToString(Console.ReadLine());
+            IWebDriver driver6 = new ChromeDriver();
+            driver6.Manage().Window.Minimize();
+            driver6.Navigate().GoToUrl("https://hackertarget.com/nmap-online-port-scanner/");
+            var element6 = driver6.FindElement(By.XPath("/html/body/main/div/div[2]/div/section/div/article/div/div[2]/div[2]/div/div[4]/div/form/input[1]"));
+            element6.Clear();
+            element6.SendKeys(web_waf);
+            var element6_click = driver6.FindElement(By.XPath("/html/body/main/div/div[2]/div/section/div/article/div/div[2]/div[2]/div/div[4]/div/form/button"));
+            element6_click.Click();
+            Thread.Sleep(10);
+
+
+            
+            var bilgi11 = driver6.FindElements(By.XPath("html/body/main/div/div[2]/div/section/div/article/div/div[2]/div[2]/div/div"));
+            
+            
+            if (bilgi11.Count > 0)
+            {
+                foreach (var bil in bilgi11)
+                {
+                    Console.WriteLine("Bilgi: " + bil.Text);
+                }
+            }
+            
+            else
+            {
+                Console.WriteLine("Belirtilen XPath ile eşleşen bilgi bulunamadı. XPath doğruluğunu kontrol edin.");
+            }
+            
+            element6_click.Submit();
+    
+            driver6.Close();
+        }
     }
 
     class Data_Hunter : İslemler // İnheritance Kullanarak Bir Class'ı Ana Class'a Bağladık
@@ -247,8 +285,8 @@ namespace Data_Hunter_Tool
         public Data_Hunter() // Class Çalıştığı Anda Constructor Çalışarak Yazıyı Yazar
         {
 
-           
-            Console.ForegroundColor= ConsoleColor.Red;
+
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("\r\n /$$$$$$$              /$$                      /$$   /$$                       /$$                        \r\n| $$__  $$            | $$                     | $$  | $$                      | $$                        \r\n| $$  \\ $$  /$$$$$$  /$$$$$$    /$$$$$$        | $$  | $$ /$$   /$$ /$$$$$$$  /$$$$$$    /$$$$$$   /$$$$$$ \r\n| $$  | $$ |____  $$|_  $$_/   |____  $$       | $$$$$$$$| $$  | $$| $$__  $$|_  $$_/   /$$__  $$ /$$__  $$\r\n| $$  | $$  /$$$$$$$  | $$      /$$$$$$$       | $$__  $$| $$  | $$| $$  \\ $$  | $$    | $$$$$$$$| $$  \\__/\r\n| $$  | $$ /$$__  $$  | $$ /$$ /$$__  $$       | $$  | $$| $$  | $$| $$  | $$  | $$ /$$| $$_____/| $$      \r\n| $$$$$$$/|  $$$$$$$  |  $$$$/|  $$$$$$$       | $$  | $$|  $$$$$$/| $$  | $$  |  $$$$/|  $$$$$$$| $$      \r\n|_______/  \\_______/   \\___/   \\_______//$$$$$$|__/  |__/ \\______/ |__/  |__/   \\___/   \\_______/|__/      \r\n                                       |______/                                                            \r\n                                                                                                           \r\n                                                                                                           \r\n");
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Thread.Sleep(2000);
@@ -262,7 +300,7 @@ namespace Data_Hunter_Tool
         ~Data_Hunter()
         {
             Console.WriteLine("");
-            Console.WriteLine("© Telif Hakları Web_Hunter Şirketi Bünyesine Dahildir!"); // Yıkıcı Metod Kullandık
+            Console.WriteLine("© Telif Hakları Data_Hunter Şirketi Bünyesine Dahildir!"); // Yıkıcı Metod Kullandık
         }
 
         public void Secenekler()
@@ -273,15 +311,16 @@ namespace Data_Hunter_Tool
             Console.WriteLine("[2] IP Adresim Ne?");
             Console.WriteLine("[3] Web siteden Bilgi Toplama");
             Console.WriteLine("[4] Telefon Numarasından Bilgi Toplama");
-            Console.WriteLine("[5] Web Site FireWall Tespiti");
-            Console.WriteLine("[6] Hakkımızda");
+            Console.WriteLine("[5] MD5 ve SHA1 HASH Kodu Dönüştürücü");
+            Console.WriteLine("[6] Site Port Tarayıcı");
+            Console.WriteLine("[7] Hakkımızda");
             try                                                           //TRY-CATCH YAPISI KULLANILARAK HATA YAKALANDI 
             {
                 secenek = Convert.ToByte(Console.ReadLine());
             }
             catch                                                         //TRY-CATCH YAPISI KULLANILARAK HATA YAKALANDI 
             {
-                Console.WriteLine("HATA !! , String formatında değer girdiniz !"); 
+                Console.WriteLine("HATA !! , String formatında değer girdiniz !");
             }
             switch (secenek)
             {
@@ -311,6 +350,11 @@ namespace Data_Hunter_Tool
                     Console.ResetColor();
                     break;
                 case 6:
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    islem6();
+                    Console.ResetColor();
+                    break;
+                case 7:
                     Console.ForegroundColor = ConsoleColor.Red;
                     hakkimizda();
                     Console.ResetColor();
@@ -318,19 +362,15 @@ namespace Data_Hunter_Tool
                 default:
                     Console.WriteLine("Lütfen (1-6) sayı giriniz");
                     break;
-
-               
-
-
             }
-            
+
         }
     }
     internal class Program
     {
         static void Main(string[] args)
-        { 
-           Data_Hunter data_Hunter = new Data_Hunter();
+        {
+            Data_Hunter data_Hunter = new Data_Hunter();
         }
     }
 }
